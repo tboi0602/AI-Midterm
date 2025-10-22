@@ -1,0 +1,121 @@
+// A* Search Expansion
+digraph {
+	graph [rankdir=TB]
+	-9176285765384827016 [label="834
+6_5
+271" fillcolor="#4eacff" shape=square style=filled]
+	6516614756841936483 [label="834
+65_
+721" fillcolor=white shape=square style=filled]
+	-9176285765384827016 -> 6516614756841936483 [label="[L]
+↓
+(7)→(2)"]
+	-7346609887823684373 [label="835
+674
+2_1" fillcolor=white shape=square style=filled]
+	-9176285765384827016 -> -7346609887823684373 [label="[U]
+↓
+(5)→(4)"]
+	-5541964507708389780 [label="1_4
+635
+278" fillcolor=white shape=square style=filled]
+	-9176285765384827016 -> -5541964507708389780 [label="[D]
+↓
+(1)→(8)"]
+	3550465564008571162 [label="8_4
+635
+721" fillcolor=white shape=square style=filled]
+	-9176285765384827016 -> 3550465564008571162 [label="[D]
+↓
+(7)→(2)"]
+	-6083669023409939851 [label="14_
+365
+278" fillcolor=white shape=square style=filled]
+	-5541964507708389780 -> -6083669023409939851 [label="[L]
+↓
+(3)→(6)"]
+	4325053927500358081 [label="8_5
+634
+271" fillcolor=white shape=square style=filled]
+	-9176285765384827016 -> 4325053927500358081 [label="[D]
+↓
+(5)→(4)"]
+	-5861256009516346870 [label="85_
+634
+721" fillcolor=white shape=square style=filled]
+	4325053927500358081 -> -5861256009516346870 [label="[L]
+↓
+(7)→(2)"]
+	-8311744015149729418 [label="132
+6_5
+478" fillcolor=white shape=square style=filled]
+	-5541964507708389780 -> -8311744015149729418 [label="[U]
+↓
+(2)→(4)"]
+	-7276388576597606320 [label="8_7
+634
+521" fillcolor=white shape=square style=filled]
+	-5861256009516346870 -> -7276388576597606320 [label="[R]
+↓
+(7)→(5)"]
+	1199205356162676324 [label="1_2
+365
+478" fillcolor=white shape=square style=filled]
+	-6083669023409939851 -> 1199205356162676324 [label="[R]
+↓
+(2)→(4)"]
+	-1610592876213948106 [label="834
+675
+_21" fillcolor=white shape=square style=filled]
+	-7346609887823684373 -> -1610592876213948106 [label="[R]
+↓
+(4)→(5)"]
+	7586246181270963470 [label="83_
+654
+271" fillcolor=white shape=square style=filled]
+	6516614756841936483 -> 7586246181270963470 [label="[D]
+↓
+(2)→(7)"]
+	-7598032709215343554 [label="8_2
+654
+371" fillcolor=white shape=square style=filled]
+	7586246181270963470 -> -7598032709215343554 [label="[R]
+↓
+(2)→(3)"]
+	4663413107409953013 [label="_12
+635
+478" fillcolor=white shape=square style=filled]
+	-5541964507708389780 -> 4663413107409953013 [label="[R]
+↓
+(2)→(4)"]
+	-8256964749600134216 [label="12_
+635
+478" fillcolor=white shape=square style=filled]
+	1199205356162676324 -> -8256964749600134216 [label="[L]
+↓
+(6)→(3)"]
+	-6782988351131233569 [label="87_
+364
+521" fillcolor=white shape=square style=filled]
+	-7276388576597606320 -> -6782988351131233569 [label="[L]
+↓
+(3)→(6)"]
+	4757660495382856450 [label="134
+_65
+278" fillcolor=white shape=square style=filled]
+	-9176285765384827016 -> 4757660495382856450 [label="[R]
+↓
+(1)→(8)"]
+	-3855160269273965528 [label="835
+6_4
+721" fillcolor=white shape=square style=filled]
+	6516614756841936483 -> -3855160269273965528 [label="[R]
+↓
+(5)→(4)"]
+	1169291619431889210 [label="8_4
+365
+271" fillcolor=white shape=square style=filled]
+	-9176285765384827016 -> 1169291619431889210 [label="[D]
+↓
+(3)→(6)"]
+}
