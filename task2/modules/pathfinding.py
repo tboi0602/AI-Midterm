@@ -19,7 +19,7 @@ class PathFinder:
       return 0
     queue = deque([(start, 0)])
     visited: Set[Pos] = {start}
-    portal_set = set(portals)
+
     
     while queue:
       (x, y), cost = queue.popleft()
@@ -36,7 +36,7 @@ class PathFinder:
           continue
         
         #* Xử lý cổng tele
-        if new_pos in portal_set:
+        if new_pos in portals:
           current_portal = new_pos
           #* Từ cổng hiện tại đến bất kì cổng nào cho chi phí là 1
           for target_portal in portals:
@@ -46,7 +46,7 @@ class PathFinder:
           visited.add(new_pos)
           continue
         
-        #* Kiểm tra Tường (Vật cản tĩnh trong heuristic)
+        #* Kiểm tra Tường
         if (new_pos in walls and powerup_turns ==0) or (new_pos in visited): 
           continue
         
@@ -149,16 +149,16 @@ def find_multi_stage_path(game_src):
     
     while game.food_points:
         
-        # 1. Chuẩn bị các tham số động cho _shortest_path_cost
+        #* 1. Chuẩn bị các tham số
         current_walls = game.walls
         current_portals = game.portals
 
         min_cost = float('inf')
         target_pos = None
         
-        # 2. Tính toán chi phí BFS thực tế đến TẤT CẢ các mục tiêu
-        for food_target in game.food_points: # Dùng food_target để tránh nhầm lẫn
-            # Chi phí Tới FOOD trực tiếp
+        #* 2. Tính toán chi phí BFS thực tế đến TẤT CẢ các mục tiêu
+        for food_target in game.food_points: #* Dùng food_target để tránh nhầm lẫn
+            #* Chi phí Tới FOOD trực tiếp
             cost_direct_to_food = finder_util._shortest_path_cost(
                 game.player, food_target,
                 current_walls, current_portals,game.powerup_turns,
@@ -166,9 +166,9 @@ def find_multi_stage_path(game_src):
             )
             
             best_cost_for_this_food = cost_direct_to_food
-            best_first_step = food_target # Mặc định là đi thẳng tới Food
+            best_first_step = food_target #* Mặc định là đi thẳng tới Food
             
-            # Lặp qua tất cả Magic Pies để tìm đường tối ưu hơn
+            #* Lặp qua tất cả Magic Pies để tìm đường tối ưu hơn
             for magic in game.magical_pies:
                 cost_magic = finder_util._shortest_path_cost(
                     game.player, magic,
@@ -177,12 +177,12 @@ def find_multi_stage_path(game_src):
                 )
                 cost_food_after_eat_magic = finder_util._shortest_path_cost(
                     magic, food_target,
-                    current_walls, current_portals, 5, # Powerup = 5 khi đi từ magic
+                    current_walls, current_portals, 5, #* Powerup = 5 khi đi từ magic
                     game.w, game.h
                 )
                 cost_via_magic = cost_magic + cost_food_after_eat_magic
                 
-                # So sánh: (P -> F) vs (P -> M -> F)
+                #* So sánh: (P -> F) vs (P -> M -> F)
                 if cost_via_magic < best_cost_for_this_food:
                     best_cost_for_this_food = cost_via_magic
                     best_first_step = magic 
@@ -194,7 +194,7 @@ def find_multi_stage_path(game_src):
             print("Unable to find path to any target.")
             break
             
-        # 3. Tìm đường đi A* chính xác đến mục tiêu gần nhất đã chọn (Dùng find_path_to)
+        #* 3. Tìm đường đi A* chính xác đến mục tiêu gần nhất đã chọn (Dùng find_path_to)
         finder_a_star = PathFinder(game)
         sub_path = finder_a_star.find_path_to(target_pos)
         
@@ -202,15 +202,15 @@ def find_multi_stage_path(game_src):
             print(f"Error A*: Detailed route not found{target_pos}!")
             break
           
-        # 4. Thực hiện di chuyển từng bước
+        #* 4. Thực hiện di chuyển từng bước
         for step in sub_path:
             next_pos = game.get_moves()[step]
             game = game.move_to(next_pos, step)
             full_path.append(step)
             
             
-    # 5. khi hết food, tìm đường đến exit
-    # 5.1. Tính chi phí đi thẳng đến Exit
+    #* 5. khi hết food, tìm đường đến exit
+    #* 5.1. Tính chi phí đi thẳng đến Exit
     cost_direct_to_exit = finder_util._shortest_path_cost(
         game.player, game.exit_pos,
         game.walls, game.portals, game.powerup_turns,
@@ -220,15 +220,15 @@ def find_multi_stage_path(game_src):
     min_cost = cost_direct_to_exit
     final_target = game.exit_pos
     
-    # 5.2. Xem xét việc ăn Magic Pie (nếu còn)
+    #* 5.2. Xem xét việc ăn Magic Pie (nếu còn)
     for magic in game.magical_pies:
-        # P -> M
+        #* P -> M
         cost_p_to_m = finder_util._shortest_path_cost(
             game.player, magic,
             game.walls, game.portals, game.powerup_turns,
             game.w, game.h
         )
-        # M -> E (Powerup = 5 sau khi ăn Magic)
+        #* M -> E
         cost_m_to_e = finder_util._shortest_path_cost(
             magic, game.exit_pos,
             game.walls, game.portals, 5, 
@@ -236,38 +236,28 @@ def find_multi_stage_path(game_src):
         )
         cost_via_magic = cost_p_to_m + cost_m_to_e
         
-        # So sánh: (P -> E) vs (P -> M -> E)
+        #* So sánh: (P -> E) vs (P -> M -> E)
         if cost_via_magic < min_cost:
             min_cost = cost_via_magic
             final_target = magic # Mục tiêu đầu tiên là Magic Pie
             
-    # 5.3. Tìm đường đi A* đến mục tiêu cuối cùng đã chọn
+    #* 5.3. Tìm đường đi A* đến mục tiêu cuối cùng đã chọn
     if final_target == game.exit_pos:
-        # Đi thẳng đến Exit
+        #* Đi thẳng đến Exit
         finder = PathFinder(game)
         exit_path = finder.find_path_to(game.exit_pos)
         full_path.extend(exit_path)
     else:
-        # Cần ăn Magic Pie trước (vì nó tối ưu hơn)
-        # Bước 3a: Tìm đường đến Magic Pie
+        #* Cần ăn Magic Pie trước
         finder_to_magic = PathFinder(game)
         path_to_magic = finder_to_magic.find_path_to(final_target)
-        
-        if not path_to_magic:
-            print(f"Error A*: Detailed route not found to Magic Pie {final_target}!")
-            # Quay lại đi thẳng Exit nếu không tìm thấy đường đến Magic
-            finder = PathFinder(game)
-            exit_path = finder.find_path_to(game.exit_pos)
-            full_path.extend(exit_path)
-            return full_path
-
-        # Thực hiện di chuyển đến Magic
+        #* Thực hiện di chuyển đến Magic
         for step in path_to_magic:
             next_pos = game.get_moves()[step]
             game = game.move_to(next_pos, step)
             full_path.append(step)
 
-        # Sau khi ăn Magic, tìm đường đến Exit
+        #* Sau khi ăn Magic, tìm đường đến Exit
         finder_to_exit = PathFinder(game)
         exit_path = finder_to_exit.find_path_to(game.exit_pos)
         full_path.extend(exit_path)
@@ -275,7 +265,7 @@ def find_multi_stage_path(game_src):
     return full_path
 
 def compress_path(path: list[str]) -> str:
-  #* Nén chuỗi hành động: ['NORTH', 'NORTH',...] -> 'NORTH1 EAST1'. Giữ nguyên hành động cổng
+  #* Nén chuỗi hành động: ['NORTH', 'NORTH',...] -> 'NORTH1 EAST1'
   if not path:
     return ""
   
@@ -287,4 +277,4 @@ def compress_path(path: list[str]) -> str:
     else:
       compressed.append(f"{key}-{count}")
       
-  return " ".join(compressed)
+  return ", ".join(compressed)
